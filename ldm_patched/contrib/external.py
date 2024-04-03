@@ -9,12 +9,12 @@ import hashlib
 import traceback
 import math
 import time
-import random
 
 from PIL import Image, ImageOps, ImageSequence
 from PIL.PngImagePlugin import PngInfo
 import numpy as np
 import safetensors.torch
+import secrets
 
 pass  # sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ldm_patched"))
 
@@ -1443,7 +1443,7 @@ class PreviewImage(SaveImage):
     def __init__(self):
         self.output_dir = ldm_patched.utils.path_utils.get_temp_directory()
         self.type = "temp"
-        self.prefix_append = "_temp_" + ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for x in range(5))
+        self.prefix_append = "_temp_" + ''.join(secrets.SystemRandom().choice("abcdefghijklmnopqrstupvxyz") for x in range(5))
         self.compress_level = 1
 
     @classmethod
