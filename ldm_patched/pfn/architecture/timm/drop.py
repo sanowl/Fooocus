@@ -17,6 +17,7 @@ Hacked together by / Copyright 2020 Ross Wightman
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import math
 
 
 def drop_block_2d(
@@ -196,7 +197,7 @@ def drop_path(
     'survival rate' as the argument.
 
     """
-    if drop_prob == 0.0 or not training:
+    if math.isclose(drop_prob, 0.0, rel_tol=1e-09, abs_tol=0.0) or not training:
         return x
     keep_prob = 1 - drop_prob
     shape = (x.shape[0],) + (1,) * (

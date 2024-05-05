@@ -310,8 +310,8 @@ def bislerp(samples, width, height):
         b2_normalized = b2 / b2_norms
 
         #zero when norms are zero
-        b1_normalized[b1_norms.expand(-1,c) == 0.0] = 0.0
-        b2_normalized[b2_norms.expand(-1,c) == 0.0] = 0.0
+        b1_normalized[math.isclose(b1_norms.expand(-1,c), 0.0, rel_tol=1e-09, abs_tol=0.0)] = 0.0
+        b2_normalized[math.isclose(b2_norms.expand(-1,c), 0.0, rel_tol=1e-09, abs_tol=0.0)] = 0.0
 
         #slerp
         dot = (b1_normalized*b2_normalized).sum(1)

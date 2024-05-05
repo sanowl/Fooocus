@@ -261,7 +261,7 @@ def canny(
         hysteresis_kernels: Tensor = get_hysteresis_kernel(device, dtype)
 
         while ((edges_old - edges).abs() != 0).any():
-            weak: Tensor = (edges == 0.5).float()
+            weak: Tensor = math.isclose(edges, 0.5, rel_tol=1e-09, abs_tol=0.0).float()
             strong: Tensor = (edges == 1).float()
 
             hysteresis_magnitude: Tensor = F.conv2d(

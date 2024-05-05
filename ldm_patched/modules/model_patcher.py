@@ -4,6 +4,7 @@ import inspect
 
 import ldm_patched.modules.utils
 import ldm_patched.modules.model_management
+import math
 
 class ModelPatcher:
     def __init__(self, model, load_device, offload_device, size=0, current_device=None, weight_inplace_update=False):
@@ -218,7 +219,7 @@ class ModelPatcher:
             v = p[1]
             strength_model = p[2]
 
-            if strength_model != 1.0:
+            if not math.isclose(strength_model, 1.0, rel_tol=1e-09, abs_tol=0.0):
                 weight *= strength_model
 
             if isinstance(v, list):
@@ -232,7 +233,7 @@ class ModelPatcher:
 
             if patch_type == "diff":
                 w1 = v[0]
-                if alpha != 0.0:
+                if not math.isclose(alpha, 0.0, rel_tol=1e-09, abs_tol=0.0):
                     if w1.shape != weight.shape:
                         print("WARNING SHAPE MISMATCH {} WEIGHT NOT MERGED {} != {}".format(key, w1.shape, weight.shape))
                     else:

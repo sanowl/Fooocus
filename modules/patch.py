@@ -55,7 +55,7 @@ def calculate_weight_patched(self, patches, weight, key):
         v = p[1]
         strength_model = p[2]
 
-        if strength_model != 1.0:
+        if not math.isclose(strength_model, 1.0, rel_tol=1e-09, abs_tol=0.0):
             weight *= strength_model
 
         if isinstance(v, list):
@@ -69,7 +69,7 @@ def calculate_weight_patched(self, patches, weight, key):
 
         if patch_type == "diff":
             w1 = v[0]
-            if alpha != 0.0:
+            if not math.isclose(alpha, 0.0, rel_tol=1e-09, abs_tol=0.0):
                 if w1.shape != weight.shape:
                     print("WARNING SHAPE MISMATCH {} WEIGHT NOT MERGED {} != {}".format(key, w1.shape, weight.shape))
                 else:
@@ -94,7 +94,7 @@ def calculate_weight_patched(self, patches, weight, key):
             w_min = ldm_patched.modules.model_management.cast_to_device(v[1], weight.device, torch.float32)
             w_max = ldm_patched.modules.model_management.cast_to_device(v[2], weight.device, torch.float32)
             w1 = (w1 / 255.0) * (w_max - w_min) + w_min
-            if alpha != 0.0:
+            if not math.isclose(alpha, 0.0, rel_tol=1e-09, abs_tol=0.0):
                 if w1.shape != weight.shape:
                     print("WARNING SHAPE MISMATCH {} FOOOCUS WEIGHT NOT MERGED {} != {}".format(key, w1.shape, weight.shape))
                 else:

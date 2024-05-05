@@ -5,6 +5,7 @@ from PIL import Image, ImageFilter
 from modules.util import resample_image, set_image_shape_ceil, get_image_shape_ceil
 from modules.upscaler import perform_upscale
 import cv2
+import math
 
 
 inpaint_head_model = None
@@ -106,7 +107,7 @@ def solve_abcd(x, a, b, c, d, k):
     assert 0.0 <= k <= 1.0
 
     H, W = x.shape[:2]
-    if k == 1.0:
+    if math.isclose(k, 1.0, rel_tol=1e-09, abs_tol=0.0):
         return 0, H, 0, W
     while True:
         if b - a >= H * k and d - c >= W * k:

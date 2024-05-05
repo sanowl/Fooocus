@@ -17,6 +17,7 @@ from einops.layers.torch import Rearrange, Reduce
 from torch import einsum, nn
 
 from .layernorm import LayerNorm2d
+import math
 
 # helpers
 
@@ -157,7 +158,7 @@ class Dropsample(nn.Module):
     def forward(self, x):
         device = x.device
 
-        if self.prob == 0.0 or (not self.training):
+        if math.isclose(self.prob, 0.0, rel_tol=1e-09, abs_tol=0.0) or (not self.training):
             return x
 
         keep_mask = (

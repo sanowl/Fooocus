@@ -20,6 +20,7 @@ import ldm_patched.modules.ops as ops
 
 from modules.ops import use_patched_ops
 from transformers import CLIPTextModel, CLIPTextConfig, modeling_utils, CLIPVisionConfig, CLIPVisionModelWithProjection
+import math
 
 
 def patched_encode_token_weights(self, token_weight_pairs):
@@ -29,7 +30,7 @@ def patched_encode_token_weights(self, token_weight_pairs):
     for x in token_weight_pairs:
         tokens = list(map(lambda a: a[0], x))
         max_token_len = max(len(tokens), max_token_len)
-        has_weights = has_weights or not all(map(lambda a: a[1] == 1.0, x))
+        has_weights = has_weights or not all(map(lambda a: math.isclose(a[1], 1.0, rel_tol=1e-09, abs_tol=0.0), x))
         to_encode.append(tokens)
 
     sections = len(to_encode)
@@ -51,7 +52,7 @@ def patched_encode_token_weights(self, token_weight_pairs):
             for i in range(len(z)):
                 for j in range(len(z[i])):
                     weight = token_weight_pairs[k][j][1]
-                    if weight != 1.0:
+                    if not math.isclose(weight, 1.0, rel_tol=1e-09, abs_tol=0.0):
                         z[i][j] = (z[i][j] - z_empty[j]) * weight + z_empty[j]
             new_mean = z.mean()
             z = z * (original_mean / new_mean)

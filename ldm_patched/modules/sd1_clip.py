@@ -8,6 +8,7 @@ import zipfile
 from . import model_management
 import ldm_patched.modules.clip_model
 import json
+import math
 
 def gen_empty_tokens(special_tokens, length):
     start_token = special_tokens.get("start", None)
@@ -29,7 +30,7 @@ class ClipTokenWeightEncoder:
         for x in token_weight_pairs:
             tokens = list(map(lambda a: a[0], x))
             max_token_len = max(len(tokens), max_token_len)
-            has_weights = has_weights or not all(map(lambda a: a[1] == 1.0, x))
+            has_weights = has_weights or not all(map(lambda a: math.isclose(a[1], 1.0, rel_tol=1e-09, abs_tol=0.0), x))
             to_encode.append(tokens)
 
         sections = len(to_encode)
@@ -50,7 +51,7 @@ class ClipTokenWeightEncoder:
                 for i in range(len(z)):
                     for j in range(len(z[i])):
                         weight = token_weight_pairs[k][j][1]
-                        if weight != 1.0:
+                        if not math.isclose(weight, 1.0, rel_tol=1e-09, abs_tol=0.0):
                             z[i][j] = (z[i][j] - z_empty[j]) * weight + z_empty[j]
             output.append(z)
 

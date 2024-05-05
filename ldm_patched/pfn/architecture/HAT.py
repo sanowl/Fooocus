@@ -16,7 +16,7 @@ def drop_path(x, drop_prob: float = 0.0, training: bool = False):
     """Drop paths (Stochastic Depth) per sample (when applied in main path of residual blocks).
     From: https://github.com/huggingface/pytorch-image-models/blob/main/timm/layers/drop.py
     """
-    if drop_prob == 0.0 or not training:
+    if math.isclose(drop_prob, 0.0, rel_tol=1e-09, abs_tol=0.0) or not training:
         return x
     keep_prob = 1 - drop_prob
     shape = (x.shape[0],) + (1,) * (

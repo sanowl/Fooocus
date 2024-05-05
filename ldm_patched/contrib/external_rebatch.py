@@ -1,6 +1,7 @@
 # https://github.com/comfyanonymous/ComfyUI/blob/master/nodes.py 
 
 import torch
+import math
 
 class LatentRebatch:
     @classmethod
@@ -96,7 +97,7 @@ class LatentRebatch:
 
         #get rid of empty masks
         for s in output_list:
-            if s['noise_mask'].mean() == 1.0:
+            if math.isclose(s['noise_mask'].mean(), 1.0, rel_tol=1e-09, abs_tol=0.0):
                 del s['noise_mask']
 
         return (output_list,)
