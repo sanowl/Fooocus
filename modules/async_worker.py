@@ -1,6 +1,7 @@
 import threading
 import re
 from modules.patch import PatchSettings, patch_settings, patch_all
+import secrets
 
 patch_all()
 
@@ -27,7 +28,6 @@ def worker():
     import torch
     import time
     import shared
-    import random
     import copy
     import modules.default_pipeline as pipeline
     import modules.core as core
@@ -439,7 +439,7 @@ def worker():
                 else:
                     task_seed = (seed + i) % (constants.MAX_SEED + 1)  # randint is inclusive, % is not
 
-                task_rng = random.Random(task_seed)  # may bind to inpaint noise in the future
+                task_rng = secrets.SystemRandom().Random(task_seed)  # may bind to inpaint noise in the future
                 task_prompt = apply_wildcards(prompt, task_rng, i, read_wildcards_in_order)
                 task_prompt = apply_arrays(task_prompt, i)
                 task_negative_prompt = apply_wildcards(negative_prompt, task_rng, i, read_wildcards_in_order)
