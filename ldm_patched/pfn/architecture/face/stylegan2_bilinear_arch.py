@@ -1,13 +1,13 @@
 # pylint: skip-file
 # type: ignore
 import math
-import random
 
 import torch
 from torch import nn
 from torch.nn import functional as F
 
 from .fused_act import FusedLeakyReLU, fused_leaky_relu
+import secrets
 
 
 class NormStyleCode(nn.Module):
@@ -501,7 +501,7 @@ class StyleGAN2GeneratorBilinear(nn.Module):
                 latent = styles[0]
         elif len(styles) == 2:  # mixing noises
             if inject_index is None:
-                inject_index = random.randint(1, self.num_latent - 1)
+                inject_index = secrets.SystemRandom().randint(1, self.num_latent - 1)
             latent1 = styles[0].unsqueeze(1).repeat(1, inject_index, 1)
             latent2 = (
                 styles[1].unsqueeze(1).repeat(1, self.num_latent - inject_index, 1)
